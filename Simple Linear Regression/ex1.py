@@ -4,8 +4,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-# %matplotlib inline
-
 path = os.getcwd() + '/ex1data1_1.txt'
 data = pd.read_csv(path, header=None, names=['Population', 'Profit'])
 
@@ -21,7 +19,7 @@ y = dt[:, 1]
 
 
 plt.scatter(X, y, edgecolors='black')
-# plt.pltis([4, 22, -3, 25])
+
 plt.xlabel('Population')
 plt.ylabel('Profit')
 plt.grid()
@@ -31,8 +29,6 @@ plt.show()
 def compute_cost(x, y, theta):
         inner = np.power(((x*theta.T) - y), 2)
         return np.sum(inner)/(2*len(x))
-
-# data = pd.DataFrame
 
 
 data.insert(0, 'Ones', 1)
@@ -73,7 +69,7 @@ iters = 1000
 
 g, cost = gradient_descent(X, y, theta, alpha, iters)
 
-print compute_cost(X, y, g)
+print 'Optimized Cost Function Value: {}'.format(compute_cost(X, y, g))
 
 
 x = X[:, 1]
