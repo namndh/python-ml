@@ -5,8 +5,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-
-
 path = os.getcwd() + '/ex1data2.txt'
 data = pd.read_csv(path, header=None, names=['Size', 'Bedroom', 'Price'] )
 
@@ -34,11 +32,11 @@ def gradient_descend(x, y, theta, alpha, iters, size):
         error = (x * theta.T) - y
 
         for j in range(param):
-            term = np.multiply(error,X[:, j])
-            temp[0,j] = theta[0,j] - alpha * 1/size * np.sum(term)
+            term = np.multiply(error, X[:, j])
+            temp[0, j] = theta[0, j] - alpha * 1/size * np.sum(term)
 
         theta = temp
-        cost[i] = compute_cost(x,y,theta,size)
+        cost[i] = compute_cost(x, y, theta, size)
 
     return theta, cost
 
