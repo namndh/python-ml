@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.io import loadmat
-
+from scipy.optimize import minimize
 data = loadmat('ex3data1.mat')
 print (data)
 
@@ -126,7 +126,7 @@ def backprop(params, input_size, hidden_layer_size, num_labels, X, y, learning_r
     theta1_grad[:, 1:] = theta1_grad[:, 1:] + learning_rate / m * theta1[:, 1:]
     theta2_grad[:, 1:] = theta2_grad[:, 1:] + learning_rate / m * theta2[:, 1:]
 
-    grad = np.concatenate((np.ravel(theta1_grad), np.ravel(theta2_grad))    )
+    grad = np.concatenate((np.ravel(theta1_grad), np.ravel(theta2_grad)))
 
     return J , grad
 
@@ -134,3 +134,21 @@ def backprop(params, input_size, hidden_layer_size, num_labels, X, y, learning_r
 J, grad = backprop(params, input_size, hidden_layer_size, num_labels, X, y_processed, learning_rate)
 print(J)
 print(grad.shape)
+
+fmin = minimize(fun=backprop, x0=params, args=(input_size, hidden_layer_size, num_labels, X, y_processed, learning_rate),
+                method='TNC', jac=True, options={'maxiter': 250})
+# print(fmin)
+X = np.matrix(X)
+theta1 = np.matrix(np.reshape(fmin.x[:hidden_layer_size * (input_size + 1)], (hidden_layer_size, (input_size + 1))))
+theta2 = np.matrix(np.reshape(fmin.x[hidden_layer_size * (input_size + 1):],
+                              (num_labels, (hidden_layer_size + 1))))
+
+a1, z2, a2, z3, h = forward_propagate(X, theta1, theta2)
+print (h.shape)
+y_pred = np.array(np.argmax(h, axis=1) + 1)
+print(y_pred.shape)
+pred = [1 if a == b else 0 for (a,b) in zip(y_pred, y)]
+
+accuracy = (sum(map(int, pred))/float(len(pred)))
+
+print ("Accuracy of the Neural Network = {}%".format(accuracy * 100))
